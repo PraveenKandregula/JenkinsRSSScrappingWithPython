@@ -6,8 +6,8 @@ from datetime import date,timedelta
 import re
 import sys
 
-ydate = str(datetime.date.today()-timedelta(1))
-#ydate = str(datetime.date.today())
+#ydate = str(datetime.date.today()-timedelta(30))
+ydate = str(datetime.date.today())
 #print ydate
 
 #This method formats credentials
@@ -15,9 +15,9 @@ def auth_headers(username, password):
    return 'Basic ' + base64.encodestring('%s:%s' % (username, password))[:-1]
 
 #Credentials go here
-auth = auth_headers(sys.argv[2], sys.argv[3])
+auth = auth_headers(sys.argv[1], sys.argv[2])
 #Home page url
-homeUrl = sys.argv[1]
+homeUrl = sys.argv[3]
 #RSS url
 rssUrl = homeUrl+'/rssAll'
 #This completes authentication and reads data from RSS url
@@ -37,4 +37,9 @@ print "Below jobs have run on date " +str(ydate)
 for e in entries:
 	#if ydate in e.find('published'):
 	if re.search(str(ydate),str(e)):
-		print e.find('title'),'\t',e.find('published'),'\n' 
+		#print e.find('title'),'\t',e.find('published'),'\n' 
+		Title,TriggerTime = e.find('title'),e.find('published')
+		#print Title,'\t',TriggerTime
+		TitleTrim = re.findall(re.escape('<title>')+"(.*)"+re.escape('</title>'),str(Title))[0]
+		TriggerTimeTrim = re.findall(re.escape('<published>')+"(.*)"+re.escape('</published>'),str(TriggerTime))[0]
+		print TitleTrim,'\t',TriggerTimeTrim
