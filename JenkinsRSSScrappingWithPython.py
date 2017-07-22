@@ -1,13 +1,9 @@
-import urllib,urllib2
-import base64
+import urllib,urllib2,base64,datetime,re,sys
 from bs4 import BeautifulSoup
-import datetime
 from datetime import date,timedelta
-import re
-import sys
 
-#ydate = str(datetime.date.today()-timedelta(30))
-ydate = str(datetime.date.today())
+ydate = str(datetime.date.today()-timedelta(1))
+#ydate = str(datetime.date.today())
 #print ydate
 
 #This method formats credentials
@@ -31,15 +27,18 @@ rssFeedXml = BeautifulSoup(rssFeed,"lxml")
 
 #Extracting all entries from xml
 entries =  rssFeedXml.find_all('entry')
+entriesString = str(entries)
 
-print "Below jobs have run on date " +str(ydate)
-#Iterating over all entries
-for e in entries:
-	#if ydate in e.find('published'):
-	if re.search(str(ydate),str(e)):
-		#print e.find('title'),'\t',e.find('published'),'\n' 
-		Title,TriggerTime = e.find('title'),e.find('published')
-		#print Title,'\t',TriggerTime
-		TitleTrim = re.findall(re.escape('<title>')+"(.*)"+re.escape('</title>'),str(Title))[0]
-		TriggerTimeTrim = re.findall(re.escape('<published>')+"(.*)"+re.escape('</published>'),str(TriggerTime))[0]
-		print TitleTrim,'\t',TriggerTimeTrim
+#Enter loop only if entries found for ydate
+if entriesString.count(str(ydate)) > 0 :
+	#Iterating over all entries
+	print 'Below jobs ran on '+str(ydate)
+	for e in entries:
+		#if ydate in e.find('published'):
+		if re.search(str(ydate),str(e)):
+			Title,TriggerTime = e.find('title'),e.find('published')
+			TitleTrim = re.findall(re.escape('<title>')+"(.*)"+re.escape('</title>'),str(Title))[0]
+			TriggerTimeTrim = re.findall(re.escape('<published>')+"(.*)"+re.escape('</published>'),str(TriggerTime))[0]
+			print TitleTrim,'\t',TriggerTimeTrim
+else:
+	print 'No jobs ran on '+str(ydate)	
