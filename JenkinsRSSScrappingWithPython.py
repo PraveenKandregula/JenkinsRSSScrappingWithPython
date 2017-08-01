@@ -2,8 +2,8 @@ import urllib,urllib2,base64,datetime,re,sys
 from bs4 import BeautifulSoup
 from datetime import date,timedelta
 
-ydate = str(datetime.date.today()-timedelta(1))
-#ydate = str(datetime.date.today())
+#ydate = str(datetime.date.today()-timedelta(1))
+ydate = str(datetime.date.today())
 #print ydate
 
 #This method formats credentials
@@ -29,9 +29,11 @@ rssFeedXml = BeautifulSoup(rssFeed,"lxml")
 entries =  rssFeedXml.find_all('entry')
 entriesString = str(entries)
 
+count = entriesString.count(str(ydate))/2
 #Enter loop only if entries found for ydate
-if entriesString.count(str(ydate)) > 0 :
+if str(count) > 0 :
 	#Iterating over all entries
+	print 'No.of jobs ran on '+str(ydate)+': '+str(count)
 	print 'Below jobs ran on '+str(ydate)
 	for e in entries:
 		#if ydate in e.find('published'):
