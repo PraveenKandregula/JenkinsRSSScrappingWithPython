@@ -2,8 +2,8 @@ import urllib,urllib2,base64,datetime,re,sys
 from bs4 import BeautifulSoup
 from datetime import date,timedelta
 
-ydate = str(datetime.date.today()-timedelta(1))
-#ydate = str(datetime.date.today())
+#ydate = str(datetime.date.today()-timedelta(1))
+ydate = str(datetime.date.today())
 #print ydate
 
 #This method formats credentials
@@ -47,7 +47,7 @@ if count != 0 :
 			Title,TriggerTime = e.find('title'),e.find('published')
 			TitleTrim = re.findall(re.escape('<title>')+"(.*)"+re.escape('</title>'),str(Title))[0]
 			TriggerTimeTrim = re.findall(re.escape('<published>')+"(.*)"+re.escape('</published>'),str(TriggerTime))[0]
-			if 'prod' in TitleTrim :
+			if ('prod' in TitleTrim or 'master' in TitleTrim) :
 				#print 'This is prod job'
 				#print TitleTrim,'\t',TriggerTimeTrim
 				#prodjobs = prodJobs.append(TitleTrim).append(str(',\t,')).append(TriggerTimeTrim).append(str(',\n'))
